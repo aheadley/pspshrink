@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace std;
 
-template <class NotMsgSub>
+template <class NotificationSubject>
 class Subject
 {
 public:
@@ -26,7 +26,7 @@ public:
         assert(ret == 0);
     }
       
-    void subscribe (Observer<NotMsgSub>& observer)
+    void subscribe (Observer<NotificationSubject>& observer)
     {
         pthread_mutex_lock(&m_ObserversMutex);
         removeObserver(observer);
@@ -34,7 +34,7 @@ public:
         pthread_mutex_unlock(&m_ObserversMutex);
     }
       
-    void unsubscribe(Observer<NotMsgSub>& observer)
+    void unsubscribe(Observer<NotificationSubject>& observer)
     {
         pthread_mutex_lock(&m_ObserversMutex);
         removeObserver(observer);
@@ -43,9 +43,9 @@ public:
     
 protected:
 
-    void notify (const NotMsgSub& aMsg)
+    void notify (const NotificationSubject& aMsg)
     {
-        std::vector< Observer<NotMsgSub>* > observers;
+        std::vector<Observer<NotificationSubject>* > observers;
         {
             pthread_mutex_lock(&m_ObserversMutex);
             observers = m_Observers;
@@ -59,9 +59,9 @@ protected:
         }
     }
     
-    void removeObserver(Observer<NotMsgSub>& observer)
+    void removeObserver(Observer<NotificationSubject>& observer)
     {
-        for (typename std::vector< Observer<NotMsgSub>* >::iterator myIt = m_Observers.begin();
+        for (typename std::vector<Observer<NotificationSubject>* >::iterator myIt = m_Observers.begin();
                 myIt != m_Observers.end();
                 myIt++)
         {
@@ -74,11 +74,11 @@ protected:
     }
 
 private:
-	Subject(const Subject& );
-    const Subject& operator=(const Subject& );
+	Subject(const Subject&);
+    const Subject& operator=(const Subject&);
 
-    std::vector<Observer<NotMsgSub>* > 	m_Observers;
-    pthread_mutex_t						m_ObserversMutex;
+    std::vector<Observer<NotificationSubject>* > 	m_Observers;
+    pthread_mutex_t									m_ObserversMutex;
 };
 
 #endif
