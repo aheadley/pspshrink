@@ -2,6 +2,7 @@
 #define __CISO_H__
 
 #include <string>
+#include "subject.h"
 
 typedef struct ciso_header
 {
@@ -13,6 +14,12 @@ typedef struct ciso_header
 	unsigned char align;			/* +15 : align of index value            */
 	unsigned char rsv_06[2];		/* +16 : reserved                        */
 }CISO_H;
+
+struct UpdateInfo
+{
+	int progress;
+	int compressionRate;
+};
 
 class CIsoException
 {
@@ -33,6 +40,7 @@ class CIsoException
 
 
 class CIso
+	: public Subject<UpdateInfo>
 {
     public:
         CIso();

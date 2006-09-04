@@ -4,10 +4,10 @@
 #include <vector>
 #include <assert.h>
 #include <pthread.h>
+#include <iostream>
 
 #include "observer.h"
 
-#include <iostream>
 using namespace std;
 
 template <class NotificationSubject>
@@ -51,7 +51,7 @@ protected:
             observers = m_Observers;
             pthread_mutex_unlock(&m_ObserversMutex);
         }
-        for(typename std::vector< Observer<NotMsgSub>* >::iterator myIt = observers.begin();
+        for(typename std::vector< Observer<NotificationSubject>* >::iterator myIt = observers.begin();
             myIt != observers.end();
             myIt++)
         {

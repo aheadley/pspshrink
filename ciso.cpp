@@ -62,13 +62,15 @@ long CIso::check_file_size(FILE *fp, CISO_H* ciso)
 	ciso->total_bytes = pos;
 
 	ciso_total_block = pos / ciso->block_size ;
-
+	
 	fseek(fp,0,SEEK_SET);
 
 	return pos;
 }
 
-/****************************************************************************
+
+
+/***************************************************************************
 	decompress CSO to ISO
 ****************************************************************************/
 void CIso::decompress(const std::string& filenameIn, const std::string& filenameOut)
@@ -135,7 +137,7 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 	if( fread(index_buf, 1, index_size, fin) != index_size )
 	{
 	    throw CIsoException("file read error");
-    }
+	}
 
 	// show info
 	printf("Decompress '%s' to '%s'\n",filenameIn.c_str(),filenameOut.c_str());
@@ -153,12 +155,16 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 	percent_period = ciso_total_block/100;
 	percent_cnt = 0;
 
+	UpdateInfo info;
+	info.compressionRate = 100;
+
 	for(block = 0;block < ciso_total_block ; block++)
 	{
 		if(--percent_cnt<=0)
 		{
 			percent_cnt = percent_period;
-			printf("decompress %d%%\r",block / percent_period);
+			info.progress = block / percent_period;
+			notify(info);
 		}
 
 		if(inflateInit2(&z,-15) != Z_OK)
@@ -226,11 +232,11 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 		// term zlib
 		if (inflateEnd(&z) != Z_OK)
 		{
-    	    throw CIsoException(string("inflateEnd : ") + ((z.msg) ? string(z.msg) : string("error")));
+	    	    throw CIsoException(string("inflateEnd : ") + ((z.msg) ? string(z.msg) : string("error")));
 		}
 	}
 
-    // close files
+	// close files
 	fclose(fin);
 	fclose(fout);
 }
@@ -312,20 +318,21 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 	align_b = 1<<(ciso.align);
 	align_m = align_b -1;
 
+	UpdateInfo info;
+
 	for(block = 0;block < ciso_total_block ; block++)
 	{
 		if(--percent_cnt<=0)
 		{
 			percent_cnt = percent_period;
-			printf("compress %3d%% avarage rate %3ld%%\r"
-				,block / percent_period
-				,block==0 ? 0 : 100*write_pos/(block*0x800));
+			info.progress = block / percent_period;
+			info.compressionRate = 100 * write_pos / (block * 0x800);
+			notify(info);
 		}
 
 		if(deflateInit2(&z, level , Z_DEFLATED, -15,8,Z_DEFAULT_STRATEGY) != Z_OK)
 		{
 			throw CIsoException(string("deflateInit : ") + ((z.msg) ? string(z.msg) : string("???")));
-
 		}
 
 		// write align

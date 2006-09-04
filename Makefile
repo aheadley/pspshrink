@@ -2,7 +2,7 @@ CC = g++
 LD = g++
 CFLAGS = -c -Wall
 
-LIBS=-lz
+LIBS=-lz -lpthread
 GUILIBS=`pkg-config gtkmm-2.4 --cflags --libs`
 GTKMMINCLUDES=`pkg-config gtkmm-2.4 --cflags`
 
@@ -16,7 +16,7 @@ pspshrink: pspshrink.cpp ciso.o
 mainwindow.o: mainwindow.h mainwindow.cpp
 	$(CC) $(CFLAGS) $(GTKMMINCLUDES) mainwindow.cpp
     
-ciso.o: ciso.h ciso.cpp
+ciso.o: ciso.h ciso.cpp subject.h observer.h
 	$(CC) $(CFLAGS) ciso.cpp
 	
 clean:
