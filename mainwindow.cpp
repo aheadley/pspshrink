@@ -15,8 +15,8 @@ MainWindow::MainWindow()
 , m_CompressionLabel("Compression level", ALIGN_LEFT)
 , m_CompressionSlider(1, 10, 1)
 , m_StartButton("Start")
+, m_CompressorThread(NULL)
 {
-	
 	#ifndef NDEBUG
 		cout << "DEBUGING" << endl;
 	#endif
@@ -73,6 +73,37 @@ void MainWindow::initStatusBar()
 	m_Layout.attach(m_StatusBar, 0, 2, 4, 5, EXPAND, EXPAND);
 }
 
+void MainWindow::enableControls()
+{
+	m_FileChooserButton.set_sensitive(true);
+	m_StatusBar.set_sensitive(true);
+	m_CompressionSlider.set_sensitive(true);
+}
+
+void MainWindow::disableControls()
+{
+	m_FileChooserButton.set_sensitive(false);
+	m_StartButton.set_sensitive(false);
+	m_CompressionSlider.set_sensitive(false);
+}
+
+bool MainWindow::update()
+{
+	int progress = m_IsoCompressor.getProgress();
+	m_ProgressBar.set_fraction(progress / 100.f);
+
+	if(progress == 100)
+	{
+		m_FileChooserButton.set_sensitive(true);
+		enableControls();
+		return false;
+	}
+	
+	return true;
+
+	//TODO do something with the compression
+}
+
 
 void MainWindow::openFile(string filename)
 {
@@ -91,24 +122,30 @@ void MainWindow::onStart()
 	string filenameIn = m_FileChooserButton.get_filename();
 	string extension = filenameIn.substr(filenameIn.length() - 4, filenameIn.length());
 	string filenameOut;
+
+	disableControls();
 	
 	if(extension == ".iso")
 	{
 		filenameOut = filenameIn.substr(0, filenameIn.length() - 4) + ".cso";
 		cout << filenameOut << endl;
-		m_IsoCompressor.compress(filenameIn, filenameOut, (int) m_CompressionSlider.get_value());
+		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::compress), filenameIn, filenameOut, (int) m_CompressionSlider.get_value()), false);
+		assert(m_CompressorThread);
 	}
 	else if(extension == ".cso")
 	{
 		filenameOut = filenameIn.substr(0, filenameIn.length() - 4) + ".iso";
 		cout << filenameOut << endl;
+		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::decompress), filenameIn, filenameOut), false);
+
 		m_IsoCompressor.decompress(filenameIn, filenameOut);
 	}
-	
-	cout << filenameIn << endl;
+
+	m_TimerConnection = Glib::signal_timeout().connect(sigc::mem_fun(*this, &MainWindow::update), 100);
 }
 
 void MainWindow::onFileSelected()
 {
 	m_StartButton.set_sensitive(true);
 }
+

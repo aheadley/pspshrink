@@ -2,7 +2,6 @@
 #define __CISO_H__
 
 #include <string>
-#include "subject.h"
 
 typedef struct ciso_header
 {
@@ -14,12 +13,6 @@ typedef struct ciso_header
 	unsigned char align;			/* +15 : align of index value            */
 	unsigned char rsv_06[2];		/* +16 : reserved                        */
 }CISO_H;
-
-struct UpdateInfo
-{
-	int progress;
-	int compressionRate;
-};
 
 class CIsoException
 {
@@ -40,14 +33,19 @@ class CIsoException
 
 
 class CIso
-	: public Subject<UpdateInfo>
 {
     public:
         CIso();
         ~CIso();
+		
         void compress(const std::string& filenameIn, const std::string& filenameOut, int level);
         void decompress(const std::string& filenameIn, const std::string& filenameOut);
-        
+		int getProgress() { return m_Progress; }
+		int getCompressionRate() { return m_CompressionRate; }
+       
+	protected:
+		void run();
+	
     private:
         long check_file_size(FILE *fp, CISO_H* ciso);
         
@@ -57,6 +55,8 @@ class CIso
         unsigned char* block_buf2;
         
         int ciso_total_block;
+		int m_Progress;
+		int m_CompressionRate;
 };
 
 #endif

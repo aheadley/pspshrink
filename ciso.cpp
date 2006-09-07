@@ -22,6 +22,8 @@ CIso::CIso()
 , block_buf1(NULL)
 , block_buf2(NULL)
 , ciso_total_block(0)
+, m_Progress(0)
+, m_CompressionRate(0)
 {
     
 }
@@ -90,6 +92,9 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 	CISO_H ciso;
 	z_stream z;
 	FILE *fin,*fout;
+
+	m_Progress = 0;
+	m_CompressionRate = 0;
 	
 	if((fin = fopen(filenameIn.c_str(), "rb")) == NULL)
 	{
@@ -155,16 +160,13 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 	percent_period = ciso_total_block/100;
 	percent_cnt = 0;
 
-	UpdateInfo info;
-	info.compressionRate = 100;
 
 	for(block = 0;block < ciso_total_block ; block++)
 	{
 		if(--percent_cnt<=0)
 		{
 			percent_cnt = percent_period;
-			info.progress = block / percent_period;
-			notify(info);
+			m_Progress = block / percent_period;
 		}
 
 		if(inflateInit2(&z,-15) != Z_OK)
@@ -236,6 +238,8 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 		}
 	}
 
+	m_Progress = 100;
+
 	// close files
 	fclose(fin);
 	fclose(fout);
@@ -260,6 +264,9 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 	CISO_H ciso;
 	z_stream z;
 	FILE *fin,*fout;
+
+	m_Progress = 0;
+	m_CompressionRate = 0;
 	
 	if((fin = fopen(filenameIn.c_str(), "rb")) == NULL)
 	{
@@ -318,16 +325,13 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 	align_b = 1<<(ciso.align);
 	align_m = align_b -1;
 
-	UpdateInfo info;
-
 	for(block = 0;block < ciso_total_block ; block++)
 	{
 		if(--percent_cnt<=0)
 		{
 			percent_cnt = percent_period;
-			info.progress = block / percent_period;
-			info.compressionRate = 100 * write_pos / (block * 0x800);
-			notify(info);
+			m_Progress = block / percent_period;
+			m_CompressionRate = 100 * write_pos / (block * 0x800);
 		}
 
 		if(deflateInit2(&z, level , Z_DEFLATED, -15,8,Z_DEFAULT_STRATEGY) != Z_OK)
@@ -408,6 +412,8 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 	// write header & index block
 	fseek(fout,sizeof(ciso),SEEK_SET);
 	fwrite(index_buf,1,index_size,fout);
+
+	m_Progress = 100;
 
     // close files
 	fclose(fin);
