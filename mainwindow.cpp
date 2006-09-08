@@ -62,9 +62,9 @@ void MainWindow::init()
 	m_Layout.attach(m_FileOpenLabel, 0, 1, 0, 1, FILL, FILL);
 	m_Layout.attach(m_FileChooserButton, 0, 2, 1, 2, FILL, EXPAND);
 	m_Layout.attach(m_CompressionLabel, 0, 1, 2, 3, FILL, FILL);
-	m_Layout.attach(m_CompressionInput, 0, 2, 3, 4, FILL, EXPAND);
-	m_Layout.attach(m_ProgressBar, 0, 2, 4, 5, FILL, EXPAND);
-	m_Layout.attach(m_StartButton, 1, 2, 5, 6, FILL, FILL);
+	m_Layout.attach(m_CompressionInput, 1, 2, 2, 3, FILL, EXPAND);
+	m_Layout.attach(m_ProgressBar, 0, 2, 3, 4, FILL, EXPAND);
+	m_Layout.attach(m_StartButton, 1, 2, 4, 5, FILL, FILL);
 }
 
 
@@ -72,7 +72,7 @@ void MainWindow::initStatusBar()
 {
 	m_StatusBar.set_has_resize_grip(false);
 	m_ContextId = m_StatusBar.get_context_id("Ready");
-	m_Layout.attach(m_StatusBar, 0, 2, 6, 7, EXPAND, EXPAND);
+	m_Layout.attach(m_StatusBar, 0, 2, 5, 6, EXPAND, EXPAND);
 }
 
 void MainWindow::enableControls()

@@ -6,7 +6,7 @@
 #include <gtkmm/statusbar.h>
 #include <gtkmm/label.h>
 #include <gtkmm/filechooserbutton.h>
-#include <gtkmm/scale.h>
+#include <gtkmm/spinbutton.h>
 #include <gtkmm/progressbar.h>
 #include <gtkmm/button.h>
 #include <glibmm/thread.h>
@@ -43,7 +43,7 @@ protected:
 	Gtk::Label				m_CompressionLabel;
 	Gtk::FileChooserButton	m_FileChooserButton;
 	Gtk::Adjustment			m_CompressionAdjustment;
-	Gtk::HScale				m_CompressionInput;
+	Gtk::SpinButton			m_CompressionInput;
 	Gtk::ProgressBar		m_ProgressBar;
 	Gtk::Button				m_StartButton;
 	guint 					m_ContextId;
