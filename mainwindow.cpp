@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <iostream>
+#include <sstream>
 #include <gtkmm/main.h>
 #include <gtkmm/stock.h>
 #include <gtkmm/label.h>
@@ -10,10 +11,11 @@ using namespace Gtk;
 using namespace std;
 
 MainWindow::MainWindow()
-: m_Layout(5, 2, false)
-, m_FileOpenLabel("Open file", ALIGN_LEFT)
-, m_CompressionLabel("Compression level", ALIGN_LEFT)
-, m_CompressionSlider(1, 10, 1)
+: m_Layout(7, 2, false)
+, m_FileOpenLabel("Open file:", ALIGN_LEFT)
+, m_CompressionLabel("Compression level:", ALIGN_LEFT)
+, m_CompressionAdjustment(9.0, 1.0, 9.0)
+, m_CompressionInput(m_CompressionAdjustment)
 , m_StartButton("Start")
 , m_CompressorThread(NULL)
 {
@@ -47,7 +49,7 @@ void MainWindow::quit()
 
 void MainWindow::init()
 {
-	m_CompressionSlider.set_value(9);
+	m_CompressionInput.set_digits(0);
 	m_FileChooserButton.set_size_request(250);
 	m_ProgressBar.set_size_request(-1, 30);
 	m_StartButton.set_sensitive(false);
@@ -57,12 +59,12 @@ void MainWindow::init()
 	fileFilter.add_pattern("*.cso");
 	m_FileChooserButton.set_filter(fileFilter);
 		
-	//m_Layout.attach(m_FileOpenLabel, 0, 1, 0, 1, FILL, FILL);
-	//m_Layout.attach(m_CompressionLabel, 0, 1, 1, 2, FILL, FILL);
-	m_Layout.attach(m_FileChooserButton, 0, 2, 0, 1, FILL, EXPAND);
-	m_Layout.attach(m_CompressionSlider, 0, 2, 1, 2, FILL, EXPAND);
-	m_Layout.attach(m_ProgressBar, 0, 2, 2, 3, FILL, EXPAND);
-	m_Layout.attach(m_StartButton, 1, 2, 3, 4, FILL, FILL);
+	m_Layout.attach(m_FileOpenLabel, 0, 1, 0, 1, FILL, FILL);
+	m_Layout.attach(m_FileChooserButton, 0, 2, 1, 2, FILL, EXPAND);
+	m_Layout.attach(m_CompressionLabel, 0, 1, 2, 3, FILL, FILL);
+	m_Layout.attach(m_CompressionInput, 0, 2, 3, 4, FILL, EXPAND);
+	m_Layout.attach(m_ProgressBar, 0, 2, 4, 5, FILL, EXPAND);
+	m_Layout.attach(m_StartButton, 1, 2, 5, 6, FILL, FILL);
 }
 
 
@@ -70,32 +72,38 @@ void MainWindow::initStatusBar()
 {
 	m_StatusBar.set_has_resize_grip(false);
 	m_ContextId = m_StatusBar.get_context_id("Ready");
-	m_Layout.attach(m_StatusBar, 0, 2, 4, 5, EXPAND, EXPAND);
+	m_Layout.attach(m_StatusBar, 0, 2, 6, 7, EXPAND, EXPAND);
 }
 
 void MainWindow::enableControls()
 {
 	m_FileChooserButton.set_sensitive(true);
 	m_StatusBar.set_sensitive(true);
-	m_CompressionSlider.set_sensitive(true);
+	m_CompressionInput.set_sensitive(true);
 }
 
 void MainWindow::disableControls()
 {
 	m_FileChooserButton.set_sensitive(false);
 	m_StartButton.set_sensitive(false);
-	m_CompressionSlider.set_sensitive(false);
+	m_CompressionInput.set_sensitive(false);
 }
 
 bool MainWindow::update()
 {
+	stringstream ss;
 	int progress = m_IsoCompressor.getProgress();
+	
+	ss << progress << " %";
 	m_ProgressBar.set_fraction(progress / 100.f);
+	m_ProgressBar.set_text(ss.str());
+		
 
 	if(progress == 100)
 	{
 		m_FileChooserButton.set_sensitive(true);
 		enableControls();
+		pushStatusMessage(m_ContextId, "Operation complete");
 		return false;
 	}
 	
@@ -129,7 +137,7 @@ void MainWindow::onStart()
 	{
 		filenameOut = filenameIn.substr(0, filenameIn.length() - 4) + ".cso";
 		cout << filenameOut << endl;
-		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::compress), filenameIn, filenameOut, (int) m_CompressionSlider.get_value()), false);
+		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::compress), filenameIn, filenameOut, (int) m_CompressionInput.get_value()), false);
 		assert(m_CompressorThread);
 	}
 	else if(extension == ".cso")

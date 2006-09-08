@@ -1,6 +1,6 @@
 CC = g++
-LD = g++ -D NDEBUG
-CFLAGS = -c -Wall
+LD = g++
+CFLAGS = -c -D NDEBUG -Wall
 
 LIBS=-lz -lpthread
 GUILIBS=`pkg-config gtkmm-2.4 --cflags --libs` `pkg-config --libs gthread-2.0`

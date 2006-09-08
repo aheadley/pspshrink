@@ -10,6 +10,7 @@
 #include <gtkmm/progressbar.h>
 #include <gtkmm/button.h>
 #include <glibmm/thread.h>
+#include <gtkmm/adjustment.h>
 
 #include "ciso.h"
 
@@ -41,7 +42,8 @@ protected:
 	Gtk::Label				m_FileOpenLabel;
 	Gtk::Label				m_CompressionLabel;
 	Gtk::FileChooserButton	m_FileChooserButton;
-	Gtk::HScale				m_CompressionSlider;
+	Gtk::Adjustment			m_CompressionAdjustment;
+	Gtk::HScale				m_CompressionInput;
 	Gtk::ProgressBar		m_ProgressBar;
 	Gtk::Button				m_StartButton;
 	guint 					m_ContextId;
