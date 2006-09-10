@@ -145,8 +145,7 @@ void MainWindow::onStart()
 		filenameOut = filenameIn.substr(0, filenameIn.length() - 4) + ".iso";
 		cout << filenameOut << endl;
 		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::decompress), filenameIn, filenameOut), false);
-
-		m_IsoCompressor.decompress(filenameIn, filenameOut);
+		assert(m_CompressorThread);
 	}
 
 	m_TimerConnection = Glib::signal_timeout().connect(sigc::mem_fun(*this, &MainWindow::update), 100);
