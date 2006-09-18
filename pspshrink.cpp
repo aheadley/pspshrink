@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <zlib.h>
 
@@ -46,13 +47,13 @@ int main(int argc, char *argv[])
     	{
     		isoCompressor.decompress(filenameIn, filenameOut);
     		pthread_join(thread, NULL);
-    		cout << "ciso decompress completed" << endl;
+    		cout << "ciso decompression completed" << endl;
         }
     	else
     	{
     		isoCompressor.compress(filenameIn, filenameOut, level);
     		pthread_join(thread, NULL);
-    		cout << "ciso compress completed" << endl;
+    		cout << "ciso compression completed" << endl;
     	}
     }
     catch(CIsoException& e)
@@ -67,25 +68,28 @@ void* displayInfo(void* compressor)
 {
 	CIso* isoCompressor = (CIso*) compressor;
 	
+	cout << "Progress:    %";
+	
 	while(!stop)
 	{
 		int progress = isoCompressor->getProgress();
 		int compressionRate = isoCompressor->getCompressionRate();
 		
-		cout << "Progress: " << progress << endl;
-		
-		if(compressionRate != 0)
-		{
-			cout << "CompressionRate: " << compressionRate << endl;
-		}
-		
+		cout << "\b\b\b\b" << setw(3) << progress << "%" << flush;
+	
 		if(progress == 100)
 		{
+			cout << endl;
+			if(compressionRate != 0)
+			{
+			cout << "CompressionRate: " << compressionRate << "%" << endl;
+			}
+
 			return NULL;
 		}
 		else
 		{
-			usleep(100);
+			usleep(500);
 		}
 	}
 	
