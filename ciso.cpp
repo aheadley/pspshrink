@@ -144,13 +144,6 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 	    throw CIsoException("file read error");
 	}
 
-	// show info
-	printf("Decompress '%s' to '%s'\n",filenameIn.c_str(),filenameOut.c_str());
-	printf("Total File Size %llu bytes\n",ciso.total_bytes);
-	printf("block size      %lu  bytes\n",ciso.block_size);
-	printf("total blocks    %d  blocks\n",ciso_total_block);
-	printf("index align     %d\n",1<<ciso.align);
-
 	// init zlib
 	z.zalloc = Z_NULL;
 	z.zfree  = Z_NULL;
@@ -303,13 +296,6 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 	z.zfree  = Z_NULL;
 	z.opaque = Z_NULL;
 
-	// show info
-	printf("Compress '%s' to '%s'\n",filenameIn.c_str(),filenameOut.c_str());
-	printf("Total File Size %llu bytes\n",ciso.total_bytes);
-	printf("block size      %lu  bytes\n",ciso.block_size);
-	printf("index align     %d\n",1<<ciso.align);
-	printf("compress level  %d\n",level);
-
 	// write header block
 	fwrite(&ciso,1,sizeof(ciso),fout);
 
@@ -418,6 +404,4 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
     // close files
 	fclose(fin);
 	fclose(fout);
-	//printf("ciso compress completed , total size = %8d bytes , rate %d%%\n"
-	//	,(int)write_pos,(int)(write_pos*100/ciso.total_bytes));
 }

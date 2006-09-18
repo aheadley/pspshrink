@@ -26,7 +26,7 @@ MainWindow::MainWindow()
 	set_title("PSP ISO Compressor");
 	set_border_width(5);
 	set_size_request(400, 200);
-	set_resizable(false);
+	//set_resizable(false);
 	
 	init();
 	initStatusBar();
@@ -50,8 +50,8 @@ void MainWindow::quit()
 void MainWindow::init()
 {
 	m_CompressionInput.set_digits(0);
-	m_FileChooserButton.set_size_request(250);
-	m_ProgressBar.set_size_request(-1, 30);
+	m_FileChooserButton.set_size_request(390);
+	//m_ProgressBar.set_size_request(-1, 30);
 	m_StartButton.set_sensitive(false);
 	
 	FileFilter fileFilter;
@@ -59,7 +59,7 @@ void MainWindow::init()
 	fileFilter.add_pattern("*.cso");
 	m_FileChooserButton.set_filter(fileFilter);
 		
-	m_Layout.attach(m_FileOpenLabel, 0, 1, 0, 1, FILL, FILL);
+	m_Layout.attach(m_FileOpenLabel, 0, 2, 0, 1, FILL, FILL);
 	m_Layout.attach(m_FileChooserButton, 0, 2, 1, 2, FILL, EXPAND);
 	m_Layout.attach(m_CompressionLabel, 0, 1, 2, 3, FILL, FILL);
 	m_Layout.attach(m_CompressionInput, 1, 2, 2, 3, FILL, EXPAND);
@@ -72,7 +72,7 @@ void MainWindow::initStatusBar()
 {
 	m_StatusBar.set_has_resize_grip(false);
 	m_ContextId = m_StatusBar.get_context_id("Ready");
-	m_Layout.attach(m_StatusBar, 0, 2, 5, 6, EXPAND, EXPAND);
+	m_Layout.attach(m_StatusBar, 0, 2, 5, 6, FILL, SHRINK);
 }
 
 void MainWindow::enableControls()
