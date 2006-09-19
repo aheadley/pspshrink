@@ -102,7 +102,6 @@ bool MainWindow::update()
 	
 	if(progress == 100)
 	{
-		m_FileChooserButton.set_sensitive(true);
 		enableControls();
 		return false;
 	}
