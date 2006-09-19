@@ -3,7 +3,6 @@
 
 #include <gtkmm/window.h>
 #include <gtkmm/table.h>
-#include <gtkmm/statusbar.h>
 #include <gtkmm/label.h>
 #include <gtkmm/filechooserbutton.h>
 #include <gtkmm/spinbutton.h>
@@ -23,8 +22,6 @@ public:
 
 protected:
 	void init();
-	void initStatusBar();
-	void pushStatusMessage(unsigned int context_id, std::string message);
     
 	void onStart();
 	void onFileSelected();
@@ -33,18 +30,17 @@ protected:
 	void enableControls();
 	void disableControls();
 	
-	void openFile(std::string filename);
 	bool update();
 
 	Gtk::Table 				m_Layout;
 	
-	Gtk::Statusbar 			m_StatusBar;
 	Gtk::Label				m_FileOpenLabel;
 	Gtk::Label				m_CompressionLabel;
 	Gtk::FileChooserButton	m_FileChooserButton;
 	Gtk::Adjustment			m_CompressionAdjustment;
 	Gtk::SpinButton			m_CompressionInput;
 	Gtk::ProgressBar		m_ProgressBar;
+	Gtk::ProgressBar		m_CompressionRateBar;
 	Gtk::Button				m_StartButton;
 	guint 					m_ContextId;
     

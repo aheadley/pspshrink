@@ -11,8 +11,7 @@ using namespace Gtk;
 using namespace std;
 
 MainWindow::MainWindow()
-: m_Layout(7, 2, false)
-, m_FileOpenLabel("Open file:", ALIGN_LEFT)
+: m_Layout(6, 2, false)
 , m_CompressionLabel("Compression level:", ALIGN_LEFT)
 , m_CompressionAdjustment(9.0, 1.0, 9.0)
 , m_CompressionInput(m_CompressionAdjustment)
@@ -24,12 +23,11 @@ MainWindow::MainWindow()
 	#endif
 	
 	set_title("PSP ISO Compressor");
-	set_border_width(5);
-	set_size_request(400, 200);
-	//set_resizable(false);
+	set_border_width(7);
+	set_size_request(350, 200);
+	set_resizable(false);
 	
 	init();
-	initStatusBar();
 	
 	m_StartButton.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::onStart));
 	m_FileChooserButton.signal_selection_changed().connect(sigc::mem_fun(*this, &MainWindow::onFileSelected));
@@ -50,8 +48,9 @@ void MainWindow::quit()
 void MainWindow::init()
 {
 	m_CompressionInput.set_digits(0);
-	m_FileChooserButton.set_size_request(390);
-	//m_ProgressBar.set_size_request(-1, 30);
+	m_FileChooserButton.set_size_request(336);
+	m_ProgressBar.set_size_request(-1, 30);
+	m_CompressionRateBar.set_size_request(-1, 20);
 	m_StartButton.set_sensitive(false);
 	
 	FileFilter fileFilter;
@@ -59,26 +58,19 @@ void MainWindow::init()
 	fileFilter.add_pattern("*.cso");
 	m_FileChooserButton.set_filter(fileFilter);
 		
-	m_Layout.attach(m_FileOpenLabel, 0, 2, 0, 1, FILL, FILL);
-	m_Layout.attach(m_FileChooserButton, 0, 2, 1, 2, FILL, EXPAND);
-	m_Layout.attach(m_CompressionLabel, 0, 1, 2, 3, FILL, FILL);
-	m_Layout.attach(m_CompressionInput, 1, 2, 2, 3, FILL, EXPAND);
-	m_Layout.attach(m_ProgressBar, 0, 2, 3, 4, FILL, EXPAND);
+	m_Layout.attach(m_FileChooserButton, 0, 2, 0, 1, FILL, EXPAND);
+	m_Layout.attach(m_CompressionLabel, 0, 1, 1, 2, FILL, FILL);
+	m_Layout.attach(m_CompressionInput, 1, 2, 1, 2, FILL, EXPAND);
+	m_Layout.attach(m_ProgressBar, 0, 2, 2, 3, FILL, EXPAND);
+	m_Layout.attach(m_CompressionRateBar, 0, 2, 3, 4, FILL, EXPAND);
 	m_Layout.attach(m_StartButton, 1, 2, 4, 5, FILL, FILL);
 }
 
 
-void MainWindow::initStatusBar()
-{
-	m_StatusBar.set_has_resize_grip(false);
-	m_ContextId = m_StatusBar.get_context_id("Ready");
-	m_Layout.attach(m_StatusBar, 0, 2, 5, 6, FILL, SHRINK);
-}
-
 void MainWindow::enableControls()
 {
 	m_FileChooserButton.set_sensitive(true);
-	m_StatusBar.set_sensitive(true);
+	m_StartButton.set_sensitive(true);
 	m_CompressionInput.set_sensitive(true);
 }
 
@@ -93,35 +85,29 @@ bool MainWindow::update()
 {
 	stringstream ss;
 	int progress = m_IsoCompressor.getProgress();
+	int compression = m_IsoCompressor.getCompressionRate();
 	
 	ss << progress << " %";
 	m_ProgressBar.set_fraction(progress / 100.f);
 	m_ProgressBar.set_text(ss.str());
+	
+	if(compression != 0)
+	{
+		ss.str("");
+		ss << "compression: " << compression << " %";
+		m_CompressionRateBar.set_fraction(compression / 100.f);
+		m_CompressionRateBar.set_text(ss.str());
+	}
 		
-
+	
 	if(progress == 100)
 	{
 		m_FileChooserButton.set_sensitive(true);
 		enableControls();
-		pushStatusMessage(m_ContextId, "Operation complete");
 		return false;
 	}
 	
 	return true;
-
-	//TODO do something with the compression
-}
-
-
-void MainWindow::openFile(string filename)
-{
-	
-}
-
-
-void MainWindow::pushStatusMessage(unsigned int context_id, string message)
-{
-	m_StatusBar.push(message.c_str(), context_id);
 }
 
 
@@ -154,5 +140,9 @@ void MainWindow::onStart()
 void MainWindow::onFileSelected()
 {
 	m_StartButton.set_sensitive(true);
+	
+	m_CompressionRateBar.set_fraction(0);
+	m_CompressionRateBar.set_text("");
+
 }
 
