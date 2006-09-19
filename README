@@ -1,0 +1,23 @@
+PSP Shrink v1.0
+
+Author: Dirk Vanden Boer
+E-mail: dirk.vdb@gmail.com
+
+PSP shrink is a tool that allows you compress your psp iso files to the cso format compatible with devhook.
+The ciso (de)compression code is based on de ciso source code included in devhook by booster.
+
+You can always obtain the latest version of pspshrink using subversion: svn checkout http://pspshrink.googlecode.com/svn/trunk/ pspshrink
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.

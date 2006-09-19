@@ -1,0 +1,12 @@
+Dependencies
+------------
+
+gui: - gtkmm
+     - zlib
+     - gthread
+     
+command-line: - pthread
+              - zlib
+              
+To build the command line version type 'make pspshrink', a binary name 'pspshrink' is created.
+To build the gui version type 'make', a binary name 'pspshrinkgui' is created.
