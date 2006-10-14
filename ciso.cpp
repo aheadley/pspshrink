@@ -317,7 +317,11 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 		{
 			percent_cnt = percent_period;
 			m_Progress = block / percent_period;
-			m_CompressionRate = 100 * write_pos / (block * 0x800);
+			m_CompressionRate = block == 0 ? 0 : 100 - (int)(100.f * write_pos / (block * 2048));
+			if(m_CompressionRate < 0)
+			{
+				m_CompressionRate = 0;
+			}
 		}
 
 		if(deflateInit2(&z, level , Z_DEFLATED, -15,8,Z_DEFAULT_STRATEGY) != Z_OK)

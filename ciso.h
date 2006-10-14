@@ -40,8 +40,8 @@ class CIso
 		
         void compress(const std::string& filenameIn, const std::string& filenameOut, int level);
         void decompress(const std::string& filenameIn, const std::string& filenameOut);
-		int getProgress() { return m_Progress; }
-		int getCompressionRate() { return m_CompressionRate; }
+		int getProgress() const { return m_Progress; }
+		int getCompressionRate() const { return m_CompressionRate; }
        
 	protected:
 		void run();

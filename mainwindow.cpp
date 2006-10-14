@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <assert.h>
 #include <iostream>
 #include <sstream>
 #include <gtkmm/main.h>
@@ -48,6 +49,7 @@ void MainWindow::quit()
 void MainWindow::init()
 {
 	m_CompressionInput.set_digits(0);
+	m_CompressionInput.set_value(9);
 	m_FileChooserButton.set_size_request(336);
 	m_ProgressBar.set_size_request(-1, 30);
 	m_CompressionRateBar.set_size_request(-1, 20);
@@ -121,14 +123,12 @@ void MainWindow::onStart()
 	if(extension == ".iso")
 	{
 		filenameOut = filenameIn.substr(0, filenameIn.length() - 4) + ".cso";
-		cout << filenameOut << endl;
 		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::compress), filenameIn, filenameOut, (int) m_CompressionInput.get_value()), false);
 		assert(m_CompressorThread);
 	}
 	else if(extension == ".cso")
 	{
 		filenameOut = filenameIn.substr(0, filenameIn.length() - 4) + ".iso";
-		cout << filenameOut << endl;
 		m_CompressorThread = Glib::Thread::create(sigc::bind(sigc::mem_fun(m_IsoCompressor, &CIso::decompress), filenameIn, filenameOut), false);
 		assert(m_CompressorThread);
 	}
