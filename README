@@ -6,6 +6,10 @@ E-mail: dirk.vdb@gmail.com
 PSP shrink is a tool that allows you compress your psp iso files to the cso format compatible with devhook.
 The ciso (de)compression code is based on de ciso source code included in devhook by booster.
 
+Usage command line version:
+pspshrink compressionlevel inputfile outputfile
+example: pspshrink 9 image.iso image.cso
+
 You can always obtain the latest version of pspshrink using subversion: svn checkout http://pspshrink.googlecode.com/svn/trunk/ pspshrink
 
 This program is free software; you can redistribute it and/or modify
