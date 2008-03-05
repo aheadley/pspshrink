@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	string filenameIn;
 	string filenameOut;
 
-	if(argc != 4)
+	if (argc != 4)
 	{
 		cout << "Usage: ciso level infile outfile" << endl;
 		cout << "  level: 1-9 compress ISO to CSO (1=large/fast - 9=small/slow" << endl;
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	}
 	
 	level = argv[1][0] - '0';
-	if(level < 0 || level > 9)
+	if (level < 0 || level > 9)
 	{
         cerr << "Unknown mode: " << argv[1][0] << endl;
 		return 1;
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     {
     	pthread_create(&thread, NULL, displayInfo, &isoCompressor);
     	
-    	if(level==0)
+    	if (level==0)
     	{
     		isoCompressor.decompress(filenameIn, filenameOut);
     		pthread_join(thread, NULL);
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     		cout << "ciso compression completed" << endl;
     	}
     }
-    catch(CIsoException& e)
+    catch (CIsoException& e)
     {
         cout << "Error: " << e.what() << endl;
     }
