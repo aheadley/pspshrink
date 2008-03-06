@@ -23,7 +23,7 @@ MainWindow::MainWindow()
 		cout << "DEBUGING" << endl;
 	#endif
 	
-	set_title("PSP ISO Compressor");
+	set_title("Psp Shrink");
 	set_border_width(7);
 	set_size_request(350, 200);
 	set_resizable(false);

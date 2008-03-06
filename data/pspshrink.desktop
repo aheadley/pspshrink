@@ -2,7 +2,7 @@
 [Desktop Entry]
 Version=1.0.0
 Encoding=UTF-8
-Name=Pspshrink
+Name=Psp Shrink
 Comment=Compress/Decompress images for the psp
 Exec=pspshrinkui
 Terminal=false
