@@ -11,7 +11,7 @@ AC_SYS_LARGEFILE
 AC_HEADER_STDC
 AC_CHECK_HEADERS(
     [string zlib.h pthread.h],,
-    [AC_MSG_ERROR([Missing headers required to compile ffmpegthumbnailer])]
+    [AC_MSG_ERROR([Missing headers required to compile pspshrink])]
 )
 
 PKG_CHECK_MODULES(	GTKMM, gtkmm-2.4, HAVE_GTKMM=yes, 
