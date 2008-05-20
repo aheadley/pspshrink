@@ -1,4 +1,4 @@
-AC_INIT([pspshrink], [1.0.0])
+AC_INIT([pspshrink], [1.0.1])
 AC_CONFIG_SRCDIR([src])
 AM_INIT_AUTOMAKE
 
