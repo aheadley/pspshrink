@@ -1,5 +1,8 @@
 Pspshrink
 
+version 1.1.0 (21-05-2008)
+- Added application icon (credits to Oni Lukos)
+
 version 1.0.1 (20-05-2008)
 - Fixed missing includes when compiling with gcc 4.3
 

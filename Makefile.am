@@ -10,10 +10,13 @@ pspshrinkui_SOURCES     =   src/pspshrinkgui.cpp \
                             src/mainwindow.h src/mainwindow.cpp
                         
 
-pspshrinkui_CXXFLAGS    =   $(GTKMM_CFLAGS)
+pspshrinkui_CXXFLAGS    =   $(GTKMM_CFLAGS) -DDATA_DIR=\""$(datadir)"\"
 pspshrinkui_LDADD       =   $(GTKMM_LIBS) $(GTHREAD_LIBS) -lz
 
 desktopdir              =   $(datadir)/applications
 desktop_DATA            =   data/pspshrink.desktop
 
-EXTRA_DIST              =   $(desktop_DATA)
+pixmapsdir              =   $(datadir)/pixmaps
+pixmaps_DATA            =   data/pspshrink.svg
+
+EXTRA_DIST              =   $(desktop_DATA) $(pixmaps_DATA)
