@@ -31,7 +31,6 @@ MainWindow::MainWindow()
     {
         cerr << "Failed to set application icon from: " << string(DATA_DIR) + "/pixmaps/pspshrink.svg" << endl;
     }
-    cout << string(DATA_DIR) + "/pixmaps/pspshrink.svg" << endl;
     
     init();
     
