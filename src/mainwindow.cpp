@@ -27,9 +27,17 @@ MainWindow::MainWindow()
     set_border_width(7);
     set_size_request(350, 200);
     set_resizable(false);
-    if (!set_icon_from_file(string(DATA_DIR) + "/pixmaps/pspshrink.svg"))
+    
+    try
     {
-        cerr << "Failed to set application icon from: " << string(DATA_DIR) + "/pixmaps/pspshrink.svg" << endl;
+        if (!set_icon_from_file(string(DATA_DIR) + "/pixmaps/pspshrink.svg"))
+        {
+            cerr << "Failed to set application icon from: " << string(DATA_DIR) + "/pixmaps/pspshrink.svg" << endl;
+        }
+    }
+    catch (Glib::FileError&)
+    {
+        cerr << "Application icon not found in: " << string(DATA_DIR) + "/pixmaps/pspshrink.svg" << endl;
     }
     
     init();

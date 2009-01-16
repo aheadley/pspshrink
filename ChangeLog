@@ -1,5 +1,8 @@
 Pspshrink
 
+version 1.1.1 (16-01-2009)
+- Fixed crash when application icon could not be found
+
 version 1.1.0 (21-05-2008)
 - Added application icon (credits to Oni Lukos)
 
