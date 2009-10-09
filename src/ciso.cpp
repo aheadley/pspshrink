@@ -38,9 +38,9 @@ CIso::~CIso()
 	if(block_buf2) free(block_buf2);
 }
 
-long CIso::check_file_size(FILE *fp, CISO_H* ciso)
+int32_t CIso::check_file_size(FILE *fp, CISO_H* ciso)
 {
-	long pos;
+	int32_t pos;
 
 	if(fseek(fp,0,SEEK_END) < 0)
 	{
@@ -128,7 +128,7 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 	ciso_total_block = ciso.total_bytes / ciso.block_size;
 
 	// allocate index block
-	index_size = (ciso_total_block + 1 ) * sizeof(unsigned long);
+	index_size = (ciso_total_block + 1 ) * sizeof(uint32_t);
 	index_buf  = (unsigned int*) malloc(index_size);
 	block_buf1 = (unsigned char*) malloc(ciso.block_size);
 	block_buf2 = (unsigned char*) malloc(ciso.block_size*2);
@@ -244,8 +244,8 @@ void CIso::decompress(const std::string& filenameIn, const std::string& filename
 ****************************************************************************/
 void CIso::compress(const std::string& filenameIn, const std::string& filenameOut, int level)
 {
-	long file_size;
-	long write_pos;
+	int32_t file_size;
+	int32_t write_pos;
 	//int total_sectors;
 	int index_size;
 	int block;
@@ -278,7 +278,7 @@ void CIso::compress(const std::string& filenameIn, const std::string& filenameOu
 	}
 
 	// allocate index block
-	index_size = (ciso_total_block + 1 ) * sizeof(unsigned long);
+	index_size = (ciso_total_block + 1 ) * sizeof(uint32_t);
 	index_buf  = (unsigned int*) malloc(index_size);
 	crc_buf    = (unsigned int*) malloc(index_size);
 	block_buf1 = (unsigned char*) malloc(ciso.block_size);
