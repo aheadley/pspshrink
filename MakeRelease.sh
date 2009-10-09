@@ -1,6 +1,6 @@
 #!/bin/bash
 
-project="pspmpd"
+project="pspshrink"
 password=$1
 
 if [ "$password" == "" ]
