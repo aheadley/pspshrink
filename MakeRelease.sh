@@ -24,6 +24,13 @@ version=`cat configure.ac | grep AC_INIT | cut -d[ -f3 | cut -d] -f1`
 builddir="out-$version"
 rm -rf $builddir
 mkdir -p $builddir
+cd $builddir
+../configure
+if [ $? != 0 ]
+then
+	echo "Configure failed"
+	exit 1
+fi
 
 make -j3 distcheck
 if [ $? != 0 ]
